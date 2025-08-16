@@ -1,1 +1,1210 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Pilot</title></head><body><h1>Pilot Page</h1></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pilot License Creator</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Great_Vibes&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: white;
+      overflow-y: auto;
+      touch-action: auto;
+    }
+    .main-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 20px;
+      min-height: 100vh;
+      overflow-y: auto;
+      touch-action: auto;
+    }
+    .top-buttons {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 38.9px;
+      max-width: 802.9px;
+    }
+    .top-buttons a.button,
+    .top-buttons .upload-container {
+      width: 192.725px;
+      margin: 0;
+      touch-action: none;
+    }
+    .canvas-and-controls {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      width: 100%;
+      justify-content: center;
+      gap: 20px;
+    }
+    .canvas-download-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    #canvas-container {
+      width: 540.1px;
+      height: 338.8px;
+      position: relative;
+      flex-shrink: 0;
+      margin-left: 0px;
+      background-color: #f0f0f0;
+      touch-action: none;
+    }
+    .main-container.portrait #canvas-container {
+      width: 425.7px;
+      height: 675.4px;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      background-color: transparent;
+    }
+    .controls {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      flex-grow: 1;
+      max-width: 242.9px;
+    }
+    .main-container:not(.portrait) .controls {
+      margin-top: 0;
+    }
+    .photo-controls {
+      display: flex;
+      flex-direction: column;
+      width: 242.9px;
+      margin-top: 11.34px;
+    }
+    .photo-select-container {
+      display: flex;
+      flex-direction: row;
+      gap: 5px;
+      margin: 10px 0;
+      width: 242.9px;
+    }
+    .photo-select-container button {
+      width: 118.95px;
+      padding: 0;
+      margin: 0;
+      height: 50px;
+    }
+    .photo-select-container button.active {
+      background-color: #0048c0;
+    }
+    .photo-select-container button.active:hover {
+      background-color: #003087;
+    }
+    .controls-row {
+      display: flex;
+      width: 100%;
+    }
+    .slider-group {
+      width: 75%;
+      margin-bottom: 28.9px;
+    }
+    .slider-container {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+      width: 100%;
+    }
+    .slider-container label {
+      width: 80px;
+      text-align: left;
+      font-size: 14px;
+    }
+    .slider-container input[type="range"] {
+      flex: 1;
+      height: 20px;
+      touch-action: pan-x;
+      width: 100%;
+    }
+    .button-group {
+      width: 25%;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-top: 12.56px;
+    }
+    .button-group button {
+      height: 62.68px;
+      background-color: #003087;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .text-inputs {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      margin-top: 10px;
+    }
+    .download-section {
+      width: 548.76px;
+      margin-top: 6.68px;
+    }
+    .main-container.portrait .download-section {
+      width: 434.36px;
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+    .download-section button {
+      width: 100%;
+      height: 39px;
+      touch-action: none;
+      background-color: #003087;
+    }
+    .download-section button:active {
+      background-color: #4D8CFF;
+    }
+    .text-input-container {
+      display: flex;
+      flex-direction: column;
+      margin: 2mm 0;
+      width: 100%;
+    }
+    .text-input-container input[type="text"] {
+      width: 100%;
+      padding: 6px;
+      font-size: 14px;
+      border: 2px solid #000000;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    button {
+      margin: 0;
+      cursor: pointer;
+      background-color: #003087;
+      color: white;
+      border: 3px solid #003087;
+      border-radius: 8px;
+      height: 50px;
+      text-align: center;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    a.button, label.upload-button {
+      margin: 0;
+      cursor: pointer;
+      background-color: #003087;
+      color: white;
+      border: 3px solid #003087;
+      border-radius: 8px;
+      height: 78px;
+      text-align: center;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    button:hover, a.button:hover, label.upload-button:hover {
+      background-color: #00205b;
+    }
+    .hidden {
+      display: none;
+    }
+    .download-container {
+      margin: 10px 0;
+      width: 100%;
+    }
+    .upload-container {
+      position: relative;
+    }
+    .upload-container input[type="file"] {
+      display: none;
+    }
+    #loading-message {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+      border-radius: 5px;
+      display: none;
+    }
+    .great-vibes {
+      font-family: 'Great Vibes', cursive, 'Arial', sans-serif !important;
+    }
+    .disclaimer {
+      text-align: center;
+      font-size: 14px;
+      margin-bottom: 10px;
+      max-width: 802.9px;
+    }
+    @media (max-width: 740px) {
+      .main-container {
+        align-items: center;
+        min-height: auto;
+      }
+      .top-buttons {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        width: 100%;
+        max-width: 100%;
+      }
+      .top-buttons a.button,
+      .top-buttons .upload-container {
+        width: calc(45% + 3.78px);
+        box-sizing: border-box;
+        height: 35px;
+      }
+      a.button, label.upload-button {
+        height: 35px;
+        font-size: 10px;
+        padding: 0 8px;
+      }
+      .canvas-and-controls {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+      .canvas-download-wrapper {
+        align-items: center;
+        width: 100%;
+      }
+      #canvas-container {
+        margin-bottom: 0;
+        margin-left: 0;
+        max-width: 100%;
+        width: 100%;
+      }
+      .controls {
+        align-items: center;
+        max-width: 100%;
+        width: 100%;
+      }
+      .photo-controls {
+        width: 100%;
+        max-width: 100%;
+        margin-top: 0;
+      }
+      .photo-select-container {
+        width: 100%;
+        max-width: 100%;
+        margin: 3.2px 0;
+      }
+      .photo-select-container button {
+        width: 50%;
+        height: 35px;
+        font-size: 10px;
+      }
+      .controls-row {
+        display: flex;
+        width: 100%;
+      }
+      .slider-group {
+        width: 75%;
+        margin-bottom: 3.2px;
+      }
+      .slider-container {
+        width: 100%;
+        margin: 10px 0;
+      }
+      .slider-container input[type="range"] {
+        height: 20px;
+        width: 100%;
+      }
+      .button-group {
+        width: 25%;
+        margin-top: 12.56px;
+      }
+      .button-group button {
+        height: 55.12px;
+        font-size: 10px;
+      }
+      .text-inputs {
+        width: 100%;
+        max-width: 100%;
+        margin-top: 3.2px;
+      }
+      .text-input-container {
+        width: 100%;
+        margin: 5px 0;
+      }
+      .text-input-container input[type="text"] {
+        font-size: 12px;
+        padding: 6px;
+        height: 30px;
+        width: 100%;
+      }
+      .download-section {
+        width: 100%;
+        max-width: 100%;
+        margin-top: 0;
+        margin-bottom: 3.2px;
+      }
+      .download-section button {
+        height: 35px;
+        font-size: 12px;
+        width: 100%;
+      }
+      .disclaimer {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="main-container">
+    <div class="disclaimer">
+      This is a fun badge creator tool for personal use only. We do not store your data.
+    </div>
+    <div class="top-buttons">
+      <a href="https://www.etsy.com/uk/listing/1659484402/personalised-pilot-license-9-printable" target="_blank" class="button">BUY TEMPLATE</a>
+      <a href="https://www.pixelcut.ai/t/background-remover" target="_blank" class="button">REMOVE PHOTO BACKGROUND</a>
+      <div class="upload-container">
+        <label for="templateUpload" class="upload-button">UPLOAD TEMPLATE</label>
+        <input type="file" id="templateUpload" accept="image/*">
+      </div>
+      <div class="upload-container">
+        <label for="photoUpload" class="upload-button">UPLOAD PHOTO</label>
+        <input type="file" id="photoUpload" accept="image/*">
+      </div>
+    </div>
+    <div class="canvas-and-controls">
+      <div class="canvas-download-wrapper">
+        <div id="canvas-container">
+          <div id="loading-message">Loading...</div>
+        </div>
+        <div class="download-section">
+          <div class="download-container">
+            <button id="download">DOWNLOAD</button>
+          </div>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="photo-controls">
+          <div id="photo-controls" class="hidden">
+            <div class="photo-select-container">
+              <button id="selectLeft">L PHOTO</button>
+              <button id="selectRight">R PHOTO</button>
+            </div>
+            <div class="controls-row">
+              <div class="slider-group">
+                <div class="slider-container">
+                  <label for="scale">Scale: </label>
+                  <input type="range" id="scale" min="0.1" max="2" step="0.01" value="1.25" />
+                </div>
+                <div class="slider-container">
+                  <label for="xPos">Left Right: </label>
+                  <input type="range" id="xPos" min="-270.05" max="270.05" value="0" />
+                </div>
+                <div class="slider-container">
+                  <label for="yPos">Up Down: </label>
+                  <input type="range" id="yPos" min="-169.4" max="169.4" value="0" />
+                </div>
+                <div class="slider-container">
+                  <label for="rotation">Rotate: </label>
+                  <input type="range" id="rotation" min="-10" max="10" step="0.1" value="0" />
+                </div>
+              </div>
+              <div class="button-group">
+                <button id="sendBack">SEND TO BACK</button>
+                <button id="bringFront">BRING TO FRONT</button>
+              </div>
+            </div>
+            <div class="text-inputs">
+              <div class="text-input-container">
+                <input type="text" id="dimension1" autocomplete="off" />
+              </div>
+              <div class="text-input-container">
+                <input type="text" id="dimension2" autocomplete="off" />
+              </div>
+              <div class="text-input-container">
+                <input type="text" id="dimension3" autocomplete="off" />
+              </div>
+              <div class="text-input-container">
+                <input type="text" id="dimension4" autocomplete="off" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    let templateImg, photoImgLeft, photoImgRight, backgroundImg;
+    let xPosLeft = 0, yPosLeft = 0, scaleValLeft = 1.25, rotationValLeft = 0;
+    let xPosRight = 0, yPosRight = 0, scaleValRight = 1.25, rotationValRight = 0;
+    let photoInFrontLeft = true, photoInFrontRight = true;
+    let templateLoaded = false, photoLoaded = false, backgroundLoaded = false;
+    let photoAspectRatio = 1;
+    let canvasWidth = 540.1, canvasHeight = 338.8;
+    let isPortrait = false;
+    let fullName = "", dob = "", address = "", contact = "";
+    let isDraggingPhoto = false;
+    let photoDragStartX, photoDragStartY;
+    let activePhoto = 'right';
+    let pinchStartDist = 0;
+    let pinchStartScale = 1;
+    let originalTemplateWidth, originalTemplateHeight;
+    let originalPhotoHeight = 0;
+    const loadingMessage = document.getElementById('loading-message');
+    let canvas;
+    let canvasContainer;
+    let templateScale = 1;
+
+    let textX = 217.92;
+    let signatureX = 206.58;
+    let nameY = (126.16 - 10) - 1.89;
+    let dobY = (165.72 - 10) - 1.89;
+    let addressY = (205.28 - 10) - 1.89;
+    let contactY = (244.84 - 10) - 1.89;
+    let signatureY = (288.18 - 10) - 1.89;
+    const baseTextFontSize = 25;
+    const baseMaxTextWidth = 228.4;
+    const baseSignatureMaxTextWidth = 245.36;
+    const baseSignatureFontSize = 64.7;
+
+    function preload() {
+      loadImage(
+        'https://i.imgur.com/0kTci7w.png',
+        (img) => {
+          backgroundImg = img;
+          backgroundLoaded = true;
+          loadingMessage.style.display = 'none';
+        },
+        () => {
+          console.error('Failed to load background image: https://i.imgur.com/0kTci7w.png');
+          backgroundLoaded = false;
+          backgroundImg = null;
+          loadingMessage.style.display = 'none';
+        }
+      );
+    }
+
+    function setup() {
+      canvas = createCanvas(canvasWidth, canvasHeight);
+      canvas.parent('canvas-container');
+      canvasContainer = document.getElementById('canvas-container');
+      background(0, 0, 0, 0);
+      document.querySelector('#photo-controls').classList.add('hidden');
+      document.querySelector('.download-section').classList.add('hidden');
+      textFont('Special Elite');
+      updateCanvasSize();
+      updatePhotoButtonHighlight();
+
+      canvas.canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+      canvas.canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+      canvas.canvas.addEventListener('touchend', handleTouchEnd);
+    }
+
+    function updateCanvasSize() {
+      const isMobile = window.innerWidth <= 740;
+      let maxCanvasWidth = isPortrait ? 425.7 : 540.1;
+      let maxCanvasHeight = isPortrait ? 675.4 : 338.8;
+
+      if (templateLoaded && templateImg) {
+        let templateAspect = templateImg.width / templateImg.height;
+        let maxAspect = maxCanvasWidth / maxCanvasHeight;
+
+        if (templateAspect > maxAspect) {
+          canvasWidth = maxCanvasWidth;
+          canvasHeight = canvasWidth / templateAspect;
+        } else {
+          canvasHeight = maxCanvasHeight;
+          canvasWidth = canvasHeight * templateAspect;
+        }
+
+        templateScale = canvasWidth / templateImg.width;
+      } else if (backgroundLoaded && backgroundImg) {
+        let bgAspect = backgroundImg.width / backgroundImg.height;
+        let maxAspect = maxCanvasWidth / maxCanvasHeight;
+
+        if (bgAspect > maxAspect) {
+          canvasWidth = maxCanvasWidth;
+          canvasHeight = canvasWidth / bgAspect;
+        } else {
+          canvasHeight = maxCanvasHeight;
+          canvasWidth = canvasHeight * bgAspect;
+        }
+      } else {
+        canvasWidth = maxCanvasWidth;
+        canvasHeight = maxCanvasHeight;
+      }
+
+      if (isMobile) {
+        const availableWidth = window.innerWidth - 40;
+        if (canvasWidth > availableWidth) {
+          let scaleFactor = availableWidth / canvasWidth;
+          canvasWidth = availableWidth;
+          canvasHeight = canvasHeight * scaleFactor;
+        }
+      }
+
+      document.getElementById('canvas-container').style.width = `${canvasWidth}px`;
+      document.getElementById('canvas-container').style.height = `${canvasHeight}px`;
+      resizeCanvas(canvasWidth, canvasHeight);
+      if (photoLoaded) document.querySelector('#photo-controls').classList.remove('hidden');
+      if (templateLoaded) document.querySelector('.download-section').classList.remove('hidden');
+      updateSliderRanges();
+      updateTextPositions();
+    }
+
+    function updateSliderRanges() {
+      const xMax = canvasWidth / 2;
+      const yMax = canvasHeight / 2;
+      document.getElementById('xPos').setAttribute('min', -xMax);
+      document.getElementById('xPos').setAttribute('max', xMax);
+      document.getElementById('yPos').setAttribute('min', -yMax);
+      document.getElementById('yPos').setAttribute('max', yMax);
+      updateSliders();
+    }
+
+    function updateTextPositions() {
+      const baseWidth = isPortrait ? 425.7 : 540.1;
+      const baseHeight = isPortrait ? 675.4 : 338.8;
+      const widthRatio = canvasWidth / baseWidth;
+      const heightRatio = canvasHeight / baseHeight;
+
+      textX = 217.92 * widthRatio;
+      signatureX = 206.58 * widthRatio;
+      nameY = ((126.16 - 10) - 1.89) * heightRatio;
+      dobY = ((165.72 - 10) - 1.89) * heightRatio;
+      addressY = ((205.28 - 10) - 1.89) * heightRatio;
+      contactY = ((244.84 - 10) - 1.89) * heightRatio;
+      signatureY = ((288.18 - 10) - 1.89) * heightRatio;
+    }
+
+    function adjustFontSizeForText(text, initialFontSize, maxWidth, isSignature) {
+      const isMobile = window.innerWidth <= 740;
+      const baseWidth = isPortrait ? 425.7 : 540.1;
+      const widthRatio = canvasWidth / baseWidth;
+      let fontSize = initialFontSize * widthRatio;
+
+      if (isMobile && !isSignature) {
+        fontSize = initialFontSize * widthRatio;
+      } else if (isMobile && isSignature) {
+        fontSize = initialFontSize * widthRatio * 1.5;
+      }
+
+      textFont(isSignature ? 'Great Vibes' : 'Special Elite');
+      textSize(fontSize);
+      let textWidthVal = textWidth(text);
+
+      if (text.length > 10) {
+        while (textWidthVal > maxWidth * widthRatio && fontSize > 8) {
+          fontSize -= 1;
+          textSize(fontSize);
+          textWidthVal = textWidth(text);
+        }
+      }
+
+      if (!isSignature) {
+        if (isMobile) {
+          fontSize = Math.min(fontSize, 60 * widthRatio);
+        } else {
+          fontSize = Math.min(fontSize, 25 * widthRatio);
+        }
+      }
+
+      return fontSize;
+    }
+
+    function isMouseOverPhoto(photoImg, xPos, yPos, scaleVal, aspectRatio) {
+      if (!photoImg) return false;
+      let scaledHeight = photoImg.height * scaleVal;
+      let scaledWidth = scaledHeight * aspectRatio;
+      let photoX = xPos + canvasWidth / 2 - scaledWidth / 2;
+      let photoY = yPos + canvasHeight / 2 - scaledHeight / 2;
+      return mouseX >= photoX && mouseX <= photoX + scaledWidth && mouseY >= photoY && mouseY <= photoY + scaledHeight;
+    }
+
+    function isTouchWithinCanvas(touchX, touchY) {
+      const canvasRect = canvas.canvas.getBoundingClientRect();
+      return touchX >= canvasRect.left && touchX <= canvasRect.right && touchY >= canvasRect.top && touchY <= canvasRect.bottom;
+    }
+
+    function isTouchWithinPhoto(touchX, touchY, xPos, yPos, scaleVal) {
+      if (!photoLoaded || !photoImgLeft) return false;
+      const canvasRect = canvas.canvas.getBoundingClientRect();
+      const touchRelativeX = touchX - canvasRect.left;
+      const touchRelativeY = touchY - canvasRect.top;
+      let scaledHeight = photoImgLeft.height * scaleVal;
+      let scaledWidth = scaledHeight * photoAspectRatio;
+      let photoX = xPos + canvasWidth / 2 - scaledWidth / 2;
+      let photoY = yPos + canvasHeight / 2 - scaledHeight / 2 - 43.3;
+      let photoRight = photoX + scaledWidth;
+      let photoBottom = photoY + scaledHeight;
+      return touchRelativeX >= photoX && touchRelativeX <= photoRight && touchRelativeY >= photoY && touchRelativeY <= photoBottom;
+    }
+
+    function isTouchWithinPinchArea(touchX, touchY, xPos, yPos, scaleVal) {
+      if (!photoLoaded || !photoImgLeft) return false;
+      const canvasRect = canvas.canvas.getBoundingClientRect();
+      const touchRelativeX = touchX - canvasRect.left;
+      const touchRelativeY = touchY - canvasRect.top;
+      let initialScale = (photoImgLeft.width > canvasWidth * 2 || photoImgLeft.height > canvasHeight * 2) ? 0.5 : 1.25;
+      let pinchHeight = originalPhotoHeight * initialScale;
+      let photoY = yPos + canvasHeight / 2 - pinchHeight / 2 - 43.3;
+      let photoBottom = photoY + pinchHeight;
+      return touchRelativeX >= 0 && touchRelativeX <= canvasWidth && touchRelativeY >= photoY && touchRelativeY <= photoBottom;
+    }
+
+    function mousePressed() {
+      if (photoLoaded && activePhoto === 'right' && isMouseOverPhoto(photoImgRight, xPosRight, yPosRight, scaleValRight, photoAspectRatio)) {
+        isDraggingPhoto = true;
+        photoDragStartX = mouseX - xPosRight;
+        photoDragStartY = mouseY - yPosRight;
+        updateSliders();
+      } else if (photoLoaded && activePhoto === 'left' && isMouseOverPhoto(photoImgLeft, xPosLeft, yPosLeft, scaleValLeft, photoAspectRatio)) {
+        isDraggingPhoto = true;
+        photoDragStartX = mouseX - xPosLeft;
+        photoDragStartY = mouseY - yPosLeft;
+        updateSliders();
+      }
+    }
+
+    function mouseReleased() {
+      isDraggingPhoto = false;
+    }
+
+    function mouseDragged() {
+      if (isDraggingPhoto) {
+        if (activePhoto === 'left') {
+          xPosLeft = mouseX - photoDragStartX;
+          yPosLeft = mouseY - photoDragStartY;
+          document.getElementById('xPos').value = xPosLeft;
+          document.getElementById('yPos').value = yPosLeft;
+        } else if (activePhoto === 'right') {
+          xPosRight = mouseX - photoDragStartX;
+          yPosRight = mouseY - photoDragStartY;
+          document.getElementById('xPos').value = xPosRight;
+          document.getElementById('yPos').value = yPosRight;
+        }
+      }
+    }
+
+    function handleTouchStart(event) {
+      event.preventDefault();
+      const touches = event.touches;
+      if (touches.length === 1) {
+        const touch = touches[0];
+        const canvasRect = canvas.canvas.getBoundingClientRect();
+        const touchX = touch.clientX - canvasRect.left;
+        const touchY = touch.clientY - canvasRect.top;
+        if (activePhoto === 'left' && isTouchWithinPhoto(touchX, touchY, xPosLeft, yPosLeft, scaleValLeft)) {
+          isDraggingPhoto = true;
+          photoDragStartX = touchX - xPosLeft;
+          photoDragStartY = touchY - yPosLeft;
+          updateSliders();
+        } else if (activePhoto === 'right' && isTouchWithinPhoto(touchX, touchY, xPosRight, yPosRight, scaleValRight)) {
+          isDraggingPhoto = true;
+          photoDragStartX = touchX - xPosRight;
+          photoDragStartY = touchY - yPosRight;
+          updateSliders();
+        }
+      } else if (touches.length === 2) {
+        const touch1 = touches[0];
+        const touch2 = touches[1];
+        const canvasRect = canvas.canvas.getBoundingClientRect();
+        const touchX1 = touch1.clientX - canvasRect.left;
+        const touchY1 = touch1.clientY - canvasRect.top;
+        const touchX2 = touch2.clientX - canvasRect.left;
+        const touchY2 = touch2.clientY - canvasRect.top;
+        if (activePhoto === 'left' && isTouchWithinPinchArea(touchX1, touchY1, xPosLeft, yPosLeft, scaleValLeft) && isTouchWithinPinchArea(touchX2, touchY2, xPosLeft, yPosLeft, scaleValLeft)) {
+          pinchStartDist = dist(touchX1, touchY1, touchX2, touchY2);
+          pinchStartScale = scaleValLeft;
+        } else if (activePhoto === 'right' && isTouchWithinPinchArea(touchX1, touchY1, xPosRight, yPosRight, scaleValRight) && isTouchWithinPinchArea(touchX2, touchY2, xPosRight, yPosRight, scaleValRight)) {
+          pinchStartDist = dist(touchX1, touchY1, touchX2, touchY2);
+          pinchStartScale = scaleValRight;
+        }
+      }
+    }
+
+    function handleTouchMove(event) {
+      event.preventDefault();
+      const touches = event.touches;
+      if (touches.length === 1 && isDraggingPhoto) {
+        const touch = touches[0];
+        const canvasRect = canvas.canvas.getBoundingClientRect();
+        const touchX = touch.clientX - canvasRect.left;
+        const touchY = touch.clientY - canvasRect.top;
+        if (activePhoto === 'left') {
+          xPosLeft = touchX - photoDragStartX;
+          yPosLeft = touchY - photoDragStartY;
+          document.getElementById('xPos').value = xPosLeft;
+          document.getElementById('yPos').value = yPosLeft;
+        } else if (activePhoto === 'right') {
+          xPosRight = touchX - photoDragStartX;
+          yPosRight = touchY - photoDragStartY;
+          document.getElementById('xPos').value = xPosRight;
+          document.getElementById('yPos').value = yPosRight;
+        }
+      } else if (touches.length === 2 && pinchStartDist > 0) {
+        const touch1 = touches[0];
+        const touch2 = touches[1];
+        const pinchDist = dist(touch1.clientX, touch1.clientY, touch2.clientX, touch2.clientY);
+        const scaleChange = pinchDist / pinchStartDist;
+        if (activePhoto === 'left') {
+          scaleValLeft = pinchStartScale * scaleChange;
+          scaleValLeft = constrain(scaleValLeft, 0.1, 2);
+          document.getElementById('scale').value = scaleValLeft;
+        } else if (activePhoto === 'right') {
+          scaleValRight = pinchStartScale * scaleChange;
+          scaleValRight = constrain(scaleValRight, 0.1, 2);
+          document.getElementById('scale').value = scaleValRight;
+        }
+      }
+    }
+
+    function handleTouchEnd(event) {
+      isDraggingPhoto = false;
+      pinchStartDist = 0;
+    }
+
+    function dist(x1, y1, x2, y2) {
+      return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+    }
+
+    function updateSliders() {
+      if (activePhoto === 'left') {
+        document.getElementById('xPos').value = xPosLeft;
+        document.getElementById('yPos').value = yPosLeft;
+        document.getElementById('scale').value = scaleValLeft;
+        document.getElementById('rotation').value = rotationValLeft;
+      } else if (activePhoto === 'right') {
+        document.getElementById('xPos').value = xPosRight;
+        document.getElementById('yPos').value = yPosRight;
+        document.getElementById('scale').value = scaleValRight;
+        document.getElementById('rotation').value = rotationValRight;
+      }
+      updatePhotoButtonHighlight();
+    }
+
+    function updatePhotoButtonHighlight() {
+      const leftButton = document.getElementById('selectLeft');
+      const rightButton = document.getElementById('selectRight');
+      if (activePhoto === 'left') {
+        leftButton.classList.add('active');
+        rightButton.classList.remove('active');
+      } else {
+        rightButton.classList.add('active');
+        leftButton.classList.remove('active');
+      }
+    }
+
+    function drawMainText() {
+      fill(0);
+      textAlign(LEFT, TOP);
+      textFont('Special Elite');
+      if (fullName) {
+        let adjustedFontSize = adjustFontSizeForText(fullName, baseTextFontSize, baseMaxTextWidth, false);
+        textSize(adjustedFontSize);
+        text(fullName, textX, nameY);
+      }
+      if (dob) {
+        let adjustedFontSize = adjustFontSizeForText(dob, baseTextFontSize, baseMaxTextWidth, false);
+        textSize(adjustedFontSize);
+        text(dob, textX, dobY);
+      }
+      if (address) {
+        let adjustedFontSize = adjustFontSizeForText(address, baseTextFontSize, baseMaxTextWidth, false);
+        textSize(adjustedFontSize);
+        text(address, textX, addressY);
+      }
+      if (contact) {
+        let adjustedFontSize = adjustFontSizeForText(contact, baseTextFontSize, baseMaxTextWidth, false);
+        textSize(adjustedFontSize);
+        text(contact, textX, contactY);
+      }
+    }
+
+    function drawSignature() {
+      fill(0);
+      textAlign(LEFT, TOP);
+      textFont('Great Vibes');
+      if (fullName) {
+        let adjustedFontSize = adjustFontSizeForText(fullName, baseSignatureFontSize, baseSignatureMaxTextWidth, true);
+        textSize(adjustedFontSize);
+        text(fullName, signatureX, signatureY);
+      }
+    }
+
+    function draw() {
+      clear();
+      background(255);
+
+      if (backgroundLoaded && backgroundImg && !templateLoaded) {
+        let imgAspect = backgroundImg.width / backgroundImg.height;
+        let canvasAspect = canvasWidth / canvasHeight;
+        let drawWidth, drawHeight;
+
+        if (imgAspect > canvasAspect) {
+          drawHeight = canvasHeight;
+          drawWidth = drawHeight * imgAspect;
+        } else {
+          drawWidth = canvasWidth;
+          drawHeight = drawWidth / imgAspect;
+        }
+
+        image(backgroundImg, 0, 0, drawWidth, drawHeight);
+      } else if (!backgroundLoaded && !templateLoaded) {
+        fill(255);
+        noStroke();
+        rect(0, 0, canvasWidth, canvasHeight);
+      }
+
+      if (templateLoaded && templateImg) {
+        fill(255);
+        noStroke();
+        rect(0, 0, canvasWidth, canvasHeight);
+        if (photoLoaded && photoImgLeft && !photoInFrontLeft) {
+          push();
+          translate(xPosLeft + canvasWidth / 2, yPosLeft + canvasHeight / 2);
+          rotate(radians(rotationValLeft));
+          scale(scaleValLeft);
+          imageMode(CENTER);
+          image(photoImgLeft, 0, 0, photoImgLeft.width, photoImgLeft.height);
+          pop();
+        }
+        if (photoLoaded && photoImgRight && !photoInFrontRight) {
+          push();
+          translate(xPosRight + canvasWidth / 2, yPosRight + canvasHeight / 2);
+          rotate(radians(rotationValRight));
+          scale(scaleValRight);
+          imageMode(CENTER);
+          image(photoImgRight, 0, 0, photoImgRight.width, photoImgRight.height);
+          pop();
+        }
+        image(templateImg, 0, 0, canvasWidth, canvasHeight);
+        if (photoLoaded && photoImgLeft && photoInFrontLeft) {
+          push();
+          translate(xPosLeft + canvasWidth / 2, yPosLeft + canvasHeight / 2);
+          rotate(radians(rotationValLeft));
+          scale(scaleValLeft);
+          imageMode(CENTER);
+          image(photoImgLeft, 0, 0, photoImgLeft.width, photoImgLeft.height);
+          pop();
+        }
+        if (photoLoaded && photoImgRight && photoInFrontRight) {
+          push();
+          translate(xPosRight + canvasWidth / 2, yPosRight + canvasHeight / 2);
+          rotate(radians(rotationValRight));
+          scale(scaleValRight);
+          imageMode(CENTER);
+          image(photoImgRight, 0, 0, photoImgRight.width, photoImgRight.height);
+          pop();
+        }
+      }
+
+      if (templateLoaded && (fullName || dob || address || contact)) {
+        drawMainText();
+        drawSignature();
+      }
+    }
+
+    function validateFile(file, type) {
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+      const maxSizeMB = 10;
+      if (!allowedTypes.includes(file.type)) return `Please upload a ${type.toLowerCase()} in JPEG, PNG, or GIF format.`;
+      if (file.size > maxSizeMB * 1024 * 1024) return `The ${type.toLowerCase()} file exceeds the ${maxSizeMB}MB size limit.`;
+      return null;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const templateUpload = document.getElementById('templateUpload');
+      const photoUpload = document.getElementById('photoUpload');
+      const dimension1Input = document.getElementById('dimension1');
+      const dimension2Input = document.getElementById('dimension2');
+      const dimension3Input = document.getElementById('dimension3');
+      const dimension4Input = document.getElementById('dimension4');
+      const xPosSlider = document.getElementById('xPos');
+      const yPosSlider = document.getElementById('yPos');
+      const scaleSlider = document.getElementById('scale');
+      const rotationSlider = document.getElementById('rotation');
+      const sendBackButton = document.getElementById('sendBack');
+      const bringFrontButton = document.getElementById('bringFront');
+      const selectLeftButton = document.getElementById('selectLeft');
+      const selectRightButton = document.getElementById('selectRight');
+      const downloadButton = document.getElementById('download');
+
+      window.addEventListener('resize', updateCanvasSize);
+
+      templateUpload.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const validationError = validateFile(file, 'Template');
+        if (validationError) {
+          alert(validationError);
+          templateUpload.value = '';
+          return;
+        }
+        const url = URL.createObjectURL(file);
+        loadingMessage.style.display = 'block';
+        loadingMessage.textContent = 'Loading template...';
+        loadImage(url, (img) => {
+          let targetWidth = 1344;
+          let targetHeight = 841;
+          let tempCanvas = createGraphics(targetWidth, targetHeight);
+          tempCanvas.image(img, 0, 0, targetWidth, targetHeight);
+          templateImg = tempCanvas;
+          originalTemplateWidth = targetWidth;
+          originalTemplateHeight = targetHeight;
+          isPortrait = targetHeight > targetWidth;
+          document.querySelector('.main-container').classList.toggle('portrait', isPortrait);
+          templateLoaded = true;
+          updateCanvasSize();
+          loadingMessage.style.display = 'none';
+          URL.revokeObjectURL(url);
+          templateUpload.value = '';
+        }, (err) => {
+          alert('Error loading template: ' + (err.message || 'Unknown error'));
+          loadingMessage.style.display = 'none';
+          URL.revokeObjectURL(url);
+          templateUpload.value = '';
+        });
+      });
+
+      photoUpload.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const validationError = validateFile(file, 'Photo');
+        if (validationError) {
+          alert(validationError);
+          photoUpload.value = '';
+          return;
+        }
+        if (photoLoaded) {
+          alert('Only one photo can be uploaded. It will be duplicated as L Photo and R Photo.');
+          photoUpload.value = '';
+          return;
+        }
+        const url = URL.createObjectURL(file);
+        loadingMessage.style.display = 'block';
+        loadingMessage.textContent = 'Loading photo...';
+        loadImage(url, (img) => {
+          photoAspectRatio = img.width / img.height;
+          photoImgLeft = createImage(img.width, img.height);
+          photoImgLeft.copy(img, 0, 0, img.width, img.height, 0, 0, img.width, img.height);
+          photoImgRight = createImage(img.width, img.height);
+          photoImgRight.copy(img, 0, 0, img.width, img.height, 0, 0, img.width, img.height);
+          scaleValLeft = (img.width > canvasWidth * 2 || img.height > canvasHeight * 2) ? 0.5 : 1.25;
+          scaleValRight = scaleValLeft;
+          originalPhotoHeight = img.height;
+          xPosLeft = 0;
+          yPosLeft = 0;
+          xPosRight = 0;
+          yPosRight = 0;
+          rotationValLeft = 0;
+          rotationValRight = 0;
+          photoInFrontLeft = true;
+          photoInFrontRight = true;
+          photoLoaded = true;
+          activePhoto = 'right';
+          loadingMessage.style.display = 'none';
+          updateCanvasSize();
+          updateSliders();
+          URL.revokeObjectURL(url);
+          photoUpload.value = '';
+        }, (err) => {
+          alert('Error loading photo: ' + (err.message || 'Unknown error'));
+          loadingMessage.style.display = 'none';
+          URL.revokeObjectURL(url);
+          photoUpload.value = '';
+        });
+      });
+
+      dimension1Input.addEventListener('input', (e) => fullName = e.target.value);
+      dimension2Input.addEventListener('input', (e) => dob = e.target.value);
+      dimension3Input.addEventListener('input', (e) => address = e.target.value);
+      dimension4Input.addEventListener('input', (e) => contact = e.target.value);
+      xPosSlider.addEventListener('input', (e) => {
+        if (activePhoto === 'left') {
+          xPosLeft = parseFloat(e.target.value);
+        } else if (activePhoto === 'right') {
+          xPosRight = parseFloat(e.target.value);
+        }
+        updateSliders();
+      });
+      yPosSlider.addEventListener('input', (e) => {
+        if (activePhoto === 'left') {
+          yPosLeft = parseFloat(e.target.value);
+        } else if (activePhoto === 'right') {
+          yPosRight = parseFloat(e.target.value);
+        }
+        updateSliders();
+      });
+      scaleSlider.addEventListener('input', (e) => {
+        if (activePhoto === 'left') {
+          scaleValLeft = parseFloat(e.target.value);
+        } else if (activePhoto === 'right') {
+          scaleValRight = parseFloat(e.target.value);
+        }
+        updateSliders();
+      });
+      rotationSlider.addEventListener('input', (e) => {
+        if (activePhoto === 'left') {
+          rotationValLeft = parseFloat(e.target.value);
+        } else if (activePhoto === 'right') {
+          rotationValRight = parseFloat(e.target.value);
+        }
+        updateSliders();
+      });
+      sendBackButton.addEventListener('click', () => {
+        if (activePhoto === 'left') photoInFrontLeft = false;
+        else if (activePhoto === 'right') photoInFrontRight = false;
+      });
+      bringFrontButton.addEventListener('click', () => {
+        if (activePhoto === 'left') photoInFrontLeft = true;
+        else if (activePhoto === 'right') photoInFrontRight = true;
+      });
+      selectLeftButton.addEventListener('click', () => {
+        activePhoto = 'left';
+        updateSliders();
+      });
+      selectRightButton.addEventListener('click', () => {
+        activePhoto = 'right';
+        updateSliders();
+      });
+
+      downloadButton.addEventListener('click', () => {
+        if (!templateLoaded || !templateImg) {
+          alert('Please upload a template.');
+          return;
+        }
+        const resolutionMultiplier = 1;
+        const highResWidth = originalTemplateWidth;
+        const highResHeight = originalTemplateHeight;
+        let highResCanvas = createGraphics(highResWidth, highResHeight);
+        highResCanvas.background(255);
+
+        if (backgroundLoaded && backgroundImg && !templateLoaded) {
+          let imgAspect = backgroundImg.width / backgroundImg.height;
+          let canvasAspect = highResWidth / highResHeight;
+          let drawWidth, drawHeight;
+          if (imgAspect > canvasAspect) {
+            drawHeight = highResHeight;
+            drawWidth = drawHeight * imgAspect;
+          } else {
+            drawWidth = highResWidth;
+            drawHeight = drawWidth / imgAspect;
+          }
+          highResCanvas.image(backgroundImg, 0, 0, drawWidth, drawHeight);
+        } else if (!backgroundLoaded && !templateLoaded) {
+          highResCanvas.fill(255);
+          highResCanvas.noStroke();
+          highResCanvas.rect(0, 0, highResWidth, highResHeight);
+        }
+
+        if (templateLoaded) {
+          highResCanvas.fill(255);
+          highResCanvas.noStroke();
+          highResCanvas.rect(0, 0, highResWidth, highResHeight);
+        }
+
+        if (photoLoaded && photoImgLeft && !photoInFrontLeft) {
+          highResCanvas.push();
+          highResCanvas.translate((xPosLeft + canvasWidth / 2) * (highResWidth / canvasWidth), (yPosLeft + canvasHeight / 2) * (highResHeight / canvasHeight));
+          highResCanvas.rotate(radians(rotationValLeft));
+          highResCanvas.scale(scaleValLeft * (highResWidth / canvasWidth));
+          highResCanvas.imageMode(CENTER);
+          highResCanvas.image(photoImgLeft, 0, 0, photoImgLeft.width, photoImgLeft.height);
+          highResCanvas.pop();
+        }
+        if (photoLoaded && photoImgRight && !photoInFrontRight) {
+          highResCanvas.push();
+          highResCanvas.translate((xPosRight + canvasWidth / 2) * (highResWidth / canvasWidth), (yPosRight + canvasHeight / 2) * (highResHeight / canvasHeight));
+          highResCanvas.rotate(radians(rotationValRight));
+          highResCanvas.scale(scaleValRight * (highResWidth / canvasWidth));
+          highResCanvas.imageMode(CENTER);
+          highResCanvas.image(photoImgRight, 0, 0, photoImgRight.width, photoImgRight.height);
+          highResCanvas.pop();
+        }
+
+        highResCanvas.image(templateImg, 0, 0, highResWidth, highResHeight);
+
+        if (photoLoaded && photoImgLeft && photoInFrontLeft) {
+          highResCanvas.push();
+          highResCanvas.translate((xPosLeft + canvasWidth / 2) * (highResWidth / canvasWidth), (yPosLeft + canvasHeight / 2) * (highResHeight / canvasHeight));
+          highResCanvas.rotate(radians(rotationValLeft));
+          highResCanvas.scale(scaleValLeft * (highResWidth / canvasWidth));
+          highResCanvas.imageMode(CENTER);
+          highResCanvas.image(photoImgLeft, 0, 0, photoImgLeft.width, photoImgLeft.height);
+          highResCanvas.pop();
+        }
+        if (photoLoaded && photoImgRight && photoInFrontRight) {
+          highResCanvas.push();
+          highResCanvas.translate((xPosRight + canvasWidth / 2) * (highResWidth / canvasWidth), (yPosRight + canvasHeight / 2) * (highResHeight / canvasHeight));
+          highResCanvas.rotate(radians(rotationValRight));
+          highResCanvas.scale(scaleValRight * (highResWidth / canvasWidth));
+          highResCanvas.imageMode(CENTER);
+          highResCanvas.image(photoImgRight, 0, 0, photoImgRight.width, photoImgRight.height);
+          highResCanvas.pop();
+        }
+
+        highResCanvas.fill(0);
+        highResCanvas.textAlign(LEFT, TOP);
+        highResCanvas.textFont('Special Elite');
+        const textScale = highResWidth / canvasWidth;
+        if (fullName) {
+          let adjustedFontSize = adjustFontSizeForText(fullName, baseTextFontSize, baseMaxTextWidth, false);
+          highResCanvas.textSize(adjustedFontSize * textScale);
+          highResCanvas.text(fullName, textX * textScale, nameY * textScale);
+        }
+        if (dob) {
+          let adjustedFontSize = adjustFontSizeForText(dob, baseTextFontSize, baseMaxTextWidth, false);
+          highResCanvas.textSize(adjustedFontSize * textScale);
+          highResCanvas.text(dob, textX * textScale, dobY * textScale);
+        }
+        if (address) {
+          let adjustedFontSize = adjustFontSizeForText(address, baseTextFontSize, baseMaxTextWidth, false);
+          highResCanvas.textSize(adjustedFontSize * textScale);
+          highResCanvas.text(address, textX * textScale, addressY * textScale);
+        }
+        if (contact) {
+          let adjustedFontSize = adjustFontSizeForText(contact, baseTextFontSize, baseMaxTextWidth, false);
+          highResCanvas.textSize(adjustedFontSize * textScale);
+          highResCanvas.text(contact, textX * textScale, contactY * textScale);
+        }
+        highResCanvas.textFont('Great Vibes');
+        if (fullName) {
+          let adjustedFontSize = adjustFontSizeForText(fullName, baseSignatureFontSize, baseSignatureMaxTextWidth, true);
+          highResCanvas.textSize(adjustedFontSize * textScale);
+          highResCanvas.text(fullName, signatureX * textScale, signatureY * textScale);
+        }
+
+        highResCanvas.canvas.toBlob((blob) => {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = fullName ? `${fullName.replace(/[^a-zA-Z0-9]/g, '')}-FunBadge.png` : 'FunBadge.png';
+          link.style.display = 'none';
+          document.body.appendChild(link);
+          link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        }, 'image/png');
+      });
+    });
+  </script>
+</body>
+</html>
