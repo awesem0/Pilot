@@ -1,11 +1,12 @@
-<!DOCTYPE html>
+k<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
   <title>Pilot License Creator</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Great_Vibes&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Great+Vibes&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -30,7 +31,7 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 10px;
-      margin-bottom: 38.9px;
+      margin-bottom: 18.9px;
       max-width: 802.9px;
     }
     .top-buttons a.button,
@@ -56,20 +57,29 @@
     #canvas-container {
       width: 540.1px;
       height: 338.8px;
+      max-width: 100%;
+      background-image: url('https://i.imgur.com/0kTci7w.png');
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
       position: relative;
       flex-shrink: 0;
       margin-left: 0px;
       background-color: #f0f0f0;
       touch-action: none;
+      aspect-ratio: 1513 / 957;
     }
     .main-container.portrait #canvas-container {
       width: 425.7px;
       height: 675.4px;
+      max-width: 100%;
+      aspect-ratio: 425.7 / 675.4;
     }
     canvas {
       width: 100%;
       height: 100%;
       background-color: transparent;
+      display: block;
     }
     .controls {
       display: flex;
@@ -77,9 +87,10 @@
       align-items: flex-start;
       flex-grow: 1;
       max-width: 242.9px;
+      margin-top: -18.9px;
     }
     .main-container:not(.portrait) .controls {
-      margin-top: 0;
+      margin-top: -18.9px;
     }
     .photo-controls {
       display: flex;
@@ -112,7 +123,7 @@
     }
     .slider-group {
       width: 75%;
-      margin-bottom: 28.9px;
+      margin-bottom: 3.78px;
     }
     .slider-container {
       display: flex;
@@ -151,7 +162,7 @@
       display: flex;
       flex-direction: column;
       width: 100%;
-      margin-top: 10px;
+      margin-top: 3.78px;
     }
     .download-section {
       width: 548.76px;
@@ -255,6 +266,19 @@
       margin-bottom: 10px;
       max-width: 802.9px;
     }
+    .video-tutorial {
+      margin: 20px 0;
+      text-align: center;
+      max-width: 802.9px;
+      width: 100%;
+    }
+    .video-tutorial iframe {
+      max-width: 100%;
+      width: 100%;
+      height: auto;
+      max-width: 820px;
+      aspect-ratio: 16 / 9;
+    }
     @media (max-width: 740px) {
       .main-container {
         align-items: center;
@@ -291,15 +315,22 @@
         width: 100%;
       }
       #canvas-container {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
         margin-bottom: 0;
         margin-left: 0;
-        max-width: 100%;
+      }
+      .main-container.portrait #canvas-container {
         width: 100%;
+        max-width: 100%;
+        height: auto;
       }
       .controls {
         align-items: center;
         max-width: 100%;
         width: 100%;
+        margin-top: 0;
       }
       .photo-controls {
         width: 100%;
@@ -369,16 +400,22 @@
       .disclaimer {
         font-size: 12px;
       }
+      .video-tutorial iframe {
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+        aspect-ratio: 16 / 9;
+      }
     }
   </style>
 </head>
 <body>
   <div class="main-container">
     <div class="disclaimer">
-      This is a fun badge creator tool for personal use only. We do not store your data.
+      This is a fictional graphic tool for fun only. No data is stored.
     </div>
     <div class="top-buttons">
-      <a href="https://www.etsy.com/uk/listing/1659484402/personalised-pilot-license-9-printable" target="_blank" class="button">BUY TEMPLATE</a>
+      <a href="https://dailyprintdelights.etsy.com" target="_blank" class="button">BUY TEMPLATE</a>
       <a href="https://www.pixelcut.ai/t/background-remover" target="_blank" class="button">REMOVE PHOTO BACKGROUND</a>
       <div class="upload-container">
         <label for="templateUpload" class="upload-button">UPLOAD TEMPLATE</label>
@@ -449,6 +486,9 @@
         </div>
       </div>
     </div>
+    <div class="video-tutorial">
+      <iframe width="720" height="405" src="https://www.youtube.com/embed/m-DQxquSBNI?si=ucMXFXXeylDjkrLN&vq=hd720" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
   </div>
   <script>
     let templateImg, photoImgLeft, photoImgRight, backgroundImg;
@@ -471,7 +511,6 @@
     let canvas;
     let canvasContainer;
     let templateScale = 1;
-
     let textX = 217.92;
     let signatureX = 206.58;
     let nameY = (126.16 - 10) - 1.89;
@@ -483,7 +522,6 @@
     const baseMaxTextWidth = 228.4;
     const baseSignatureMaxTextWidth = 245.36;
     const baseSignatureFontSize = 64.7;
-
     function preload() {
       loadImage(
         'https://i.imgur.com/0kTci7w.png',
@@ -493,14 +531,13 @@
           loadingMessage.style.display = 'none';
         },
         () => {
-          console.error('Failed to load background image: https://i.imgur.com/0kTci7w.png');
+          console.error('Failed to load background image');
           backgroundLoaded = false;
           backgroundImg = null;
           loadingMessage.style.display = 'none';
         }
       );
     }
-
     function setup() {
       canvas = createCanvas(canvasWidth, canvasHeight);
       canvas.parent('canvas-container');
@@ -511,21 +548,17 @@
       textFont('Special Elite');
       updateCanvasSize();
       updatePhotoButtonHighlight();
-
       canvas.canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
       canvas.canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
       canvas.canvas.addEventListener('touchend', handleTouchEnd);
     }
-
     function updateCanvasSize() {
       const isMobile = window.innerWidth <= 740;
       let maxCanvasWidth = isPortrait ? 425.7 : 540.1;
       let maxCanvasHeight = isPortrait ? 675.4 : 338.8;
-
       if (templateLoaded && templateImg) {
         let templateAspect = templateImg.width / templateImg.height;
         let maxAspect = maxCanvasWidth / maxCanvasHeight;
-
         if (templateAspect > maxAspect) {
           canvasWidth = maxCanvasWidth;
           canvasHeight = canvasWidth / templateAspect;
@@ -533,12 +566,10 @@
           canvasHeight = maxCanvasHeight;
           canvasWidth = canvasHeight * templateAspect;
         }
-
         templateScale = canvasWidth / templateImg.width;
       } else if (backgroundLoaded && backgroundImg) {
         let bgAspect = backgroundImg.width / backgroundImg.height;
         let maxAspect = maxCanvasWidth / maxCanvasHeight;
-
         if (bgAspect > maxAspect) {
           canvasWidth = maxCanvasWidth;
           canvasHeight = canvasWidth / bgAspect;
@@ -550,7 +581,6 @@
         canvasWidth = maxCanvasWidth;
         canvasHeight = maxCanvasHeight;
       }
-
       if (isMobile) {
         const availableWidth = window.innerWidth - 40;
         if (canvasWidth > availableWidth) {
@@ -559,7 +589,6 @@
           canvasHeight = canvasHeight * scaleFactor;
         }
       }
-
       document.getElementById('canvas-container').style.width = `${canvasWidth}px`;
       document.getElementById('canvas-container').style.height = `${canvasHeight}px`;
       resizeCanvas(canvasWidth, canvasHeight);
@@ -568,7 +597,6 @@
       updateSliderRanges();
       updateTextPositions();
     }
-
     function updateSliderRanges() {
       const xMax = canvasWidth / 2;
       const yMax = canvasHeight / 2;
@@ -578,13 +606,11 @@
       document.getElementById('yPos').setAttribute('max', yMax);
       updateSliders();
     }
-
     function updateTextPositions() {
       const baseWidth = isPortrait ? 425.7 : 540.1;
       const baseHeight = isPortrait ? 675.4 : 338.8;
       const widthRatio = canvasWidth / baseWidth;
       const heightRatio = canvasHeight / baseHeight;
-
       textX = 217.92 * widthRatio;
       signatureX = 206.58 * widthRatio;
       nameY = ((126.16 - 10) - 1.89) * heightRatio;
@@ -593,23 +619,19 @@
       contactY = ((244.84 - 10) - 1.89) * heightRatio;
       signatureY = ((288.18 - 10) - 1.89) * heightRatio;
     }
-
     function adjustFontSizeForText(text, initialFontSize, maxWidth, isSignature) {
       const isMobile = window.innerWidth <= 740;
       const baseWidth = isPortrait ? 425.7 : 540.1;
       const widthRatio = canvasWidth / baseWidth;
       let fontSize = initialFontSize * widthRatio;
-
       if (isMobile && !isSignature) {
         fontSize = initialFontSize * widthRatio;
       } else if (isMobile && isSignature) {
         fontSize = initialFontSize * widthRatio * 1.5;
       }
-
       textFont(isSignature ? 'Great Vibes' : 'Special Elite');
       textSize(fontSize);
       let textWidthVal = textWidth(text);
-
       if (text.length > 10) {
         while (textWidthVal > maxWidth * widthRatio && fontSize > 8) {
           fontSize -= 1;
@@ -617,7 +639,6 @@
           textWidthVal = textWidth(text);
         }
       }
-
       if (!isSignature) {
         if (isMobile) {
           fontSize = Math.min(fontSize, 60 * widthRatio);
@@ -625,10 +646,8 @@
           fontSize = Math.min(fontSize, 25 * widthRatio);
         }
       }
-
       return fontSize;
     }
-
     function isMouseOverPhoto(photoImg, xPos, yPos, scaleVal, aspectRatio) {
       if (!photoImg) return false;
       let scaledHeight = photoImg.height * scaleVal;
@@ -637,18 +656,16 @@
       let photoY = yPos + canvasHeight / 2 - scaledHeight / 2;
       return mouseX >= photoX && mouseX <= photoX + scaledWidth && mouseY >= photoY && mouseY <= photoY + scaledHeight;
     }
-
     function isTouchWithinCanvas(touchX, touchY) {
       const canvasRect = canvas.canvas.getBoundingClientRect();
       return touchX >= canvasRect.left && touchX <= canvasRect.right && touchY >= canvasRect.top && touchY <= canvasRect.bottom;
     }
-
     function isTouchWithinPhoto(touchX, touchY, xPos, yPos, scaleVal) {
-      if (!photoLoaded || !photoImgLeft) return false;
+      if (!photoLoaded || (!photoImgLeft && activePhoto === 'left') || (!photoImgRight && activePhoto === 'right')) return false;
       const canvasRect = canvas.canvas.getBoundingClientRect();
       const touchRelativeX = touchX - canvasRect.left;
       const touchRelativeY = touchY - canvasRect.top;
-      let scaledHeight = photoImgLeft.height * scaleVal;
+      let scaledHeight = (activePhoto === 'left' ? photoImgLeft.height : photoImgRight.height) * scaleVal;
       let scaledWidth = scaledHeight * photoAspectRatio;
       let photoX = xPos + canvasWidth / 2 - scaledWidth / 2;
       let photoY = yPos + canvasHeight / 2 - scaledHeight / 2 - 43.3;
@@ -656,19 +673,17 @@
       let photoBottom = photoY + scaledHeight;
       return touchRelativeX >= photoX && touchRelativeX <= photoRight && touchRelativeY >= photoY && touchRelativeY <= photoBottom;
     }
-
     function isTouchWithinPinchArea(touchX, touchY, xPos, yPos, scaleVal) {
-      if (!photoLoaded || !photoImgLeft) return false;
+      if (!photoLoaded || (!photoImgLeft && activePhoto === 'left') || (!photoImgRight && activePhoto === 'right')) return false;
       const canvasRect = canvas.canvas.getBoundingClientRect();
       const touchRelativeX = touchX - canvasRect.left;
       const touchRelativeY = touchY - canvasRect.top;
-      let initialScale = (photoImgLeft.width > canvasWidth * 2 || photoImgLeft.height > canvasHeight * 2) ? 0.5 : 1.25;
+      let initialScale = (activePhoto === 'left' ? photoImgLeft.width : photoImgRight.width) > canvasWidth * 2 || (activePhoto === 'left' ? photoImgLeft.height : photoImgRight.height) > canvasHeight * 2 ? 0.5 : 1.25;
       let pinchHeight = originalPhotoHeight * initialScale;
       let photoY = yPos + canvasHeight / 2 - pinchHeight / 2 - 43.3;
       let photoBottom = photoY + pinchHeight;
       return touchRelativeX >= 0 && touchRelativeX <= canvasWidth && touchRelativeY >= photoY && touchRelativeY <= photoBottom;
     }
-
     function mousePressed() {
       if (photoLoaded && activePhoto === 'right' && isMouseOverPhoto(photoImgRight, xPosRight, yPosRight, scaleValRight, photoAspectRatio)) {
         isDraggingPhoto = true;
@@ -682,11 +697,9 @@
         updateSliders();
       }
     }
-
     function mouseReleased() {
       isDraggingPhoto = false;
     }
-
     function mouseDragged() {
       if (isDraggingPhoto) {
         if (activePhoto === 'left') {
@@ -702,7 +715,6 @@
         }
       }
     }
-
     function handleTouchStart(event) {
       event.preventDefault();
       const touches = event.touches;
@@ -739,7 +751,6 @@
         }
       }
     }
-
     function handleTouchMove(event) {
       event.preventDefault();
       const touches = event.touches;
@@ -775,16 +786,13 @@
         }
       }
     }
-
     function handleTouchEnd(event) {
       isDraggingPhoto = false;
       pinchStartDist = 0;
     }
-
     function dist(x1, y1, x2, y2) {
       return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
     }
-
     function updateSliders() {
       if (activePhoto === 'left') {
         document.getElementById('xPos').value = xPosLeft;
@@ -799,7 +807,6 @@
       }
       updatePhotoButtonHighlight();
     }
-
     function updatePhotoButtonHighlight() {
       const leftButton = document.getElementById('selectLeft');
       const rightButton = document.getElementById('selectRight');
@@ -811,7 +818,6 @@
         leftButton.classList.remove('active');
       }
     }
-
     function drawMainText() {
       fill(0);
       textAlign(LEFT, TOP);
@@ -837,7 +843,6 @@
         text(contact, textX, contactY);
       }
     }
-
     function drawSignature() {
       fill(0);
       textAlign(LEFT, TOP);
@@ -848,16 +853,13 @@
         text(fullName, signatureX, signatureY);
       }
     }
-
     function draw() {
       clear();
       background(255);
-
       if (backgroundLoaded && backgroundImg && !templateLoaded) {
         let imgAspect = backgroundImg.width / backgroundImg.height;
         let canvasAspect = canvasWidth / canvasHeight;
         let drawWidth, drawHeight;
-
         if (imgAspect > canvasAspect) {
           drawHeight = canvasHeight;
           drawWidth = drawHeight * imgAspect;
@@ -865,14 +867,15 @@
           drawWidth = canvasWidth;
           drawHeight = drawWidth / imgAspect;
         }
-
+        fill(200, 200, 200);
+        noStroke();
+        rect(0, 0, canvasWidth, canvasHeight);
         image(backgroundImg, 0, 0, drawWidth, drawHeight);
       } else if (!backgroundLoaded && !templateLoaded) {
-        fill(255);
+        fill(200, 200, 200);
         noStroke();
         rect(0, 0, canvasWidth, canvasHeight);
       }
-
       if (templateLoaded && templateImg) {
         fill(255);
         noStroke();
@@ -915,13 +918,11 @@
           pop();
         }
       }
-
       if (templateLoaded && (fullName || dob || address || contact)) {
         drawMainText();
         drawSignature();
       }
     }
-
     function validateFile(file, type) {
       const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
       const maxSizeMB = 10;
@@ -929,7 +930,6 @@
       if (file.size > maxSizeMB * 1024 * 1024) return `The ${type.toLowerCase()} file exceeds the ${maxSizeMB}MB size limit.`;
       return null;
     }
-
     document.addEventListener('DOMContentLoaded', () => {
       const templateUpload = document.getElementById('templateUpload');
       const photoUpload = document.getElementById('photoUpload');
@@ -946,9 +946,7 @@
       const selectLeftButton = document.getElementById('selectLeft');
       const selectRightButton = document.getElementById('selectRight');
       const downloadButton = document.getElementById('download');
-
       window.addEventListener('resize', updateCanvasSize);
-
       templateUpload.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -977,13 +975,13 @@
           URL.revokeObjectURL(url);
           templateUpload.value = '';
         }, (err) => {
-          alert('Error loading template: ' + (err.message || 'Unknown error'));
+          console.error('Error loading template:', err);
+          alert('Error loading template');
           loadingMessage.style.display = 'none';
           URL.revokeObjectURL(url);
           templateUpload.value = '';
         });
       });
-
       photoUpload.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -1002,6 +1000,7 @@
         loadingMessage.style.display = 'block';
         loadingMessage.textContent = 'Loading photo...';
         loadImage(url, (img) => {
+          console.log('Photo loaded successfully');
           photoAspectRatio = img.width / img.height;
           photoImgLeft = createImage(img.width, img.height);
           photoImgLeft.copy(img, 0, 0, img.width, img.height, 0, 0, img.width, img.height);
@@ -1026,13 +1025,13 @@
           URL.revokeObjectURL(url);
           photoUpload.value = '';
         }, (err) => {
-          alert('Error loading photo: ' + (err.message || 'Unknown error'));
+          console.error('Error loading photo:', err);
+          alert('Error loading photo');
           loadingMessage.style.display = 'none';
           URL.revokeObjectURL(url);
           photoUpload.value = '';
         });
       });
-
       dimension1Input.addEventListener('input', (e) => fullName = e.target.value);
       dimension2Input.addEventListener('input', (e) => dob = e.target.value);
       dimension3Input.addEventListener('input', (e) => address = e.target.value);
@@ -1085,7 +1084,6 @@
         activePhoto = 'right';
         updateSliders();
       });
-
       downloadButton.addEventListener('click', () => {
         if (!templateLoaded || !templateImg) {
           alert('Please upload a template.');
@@ -1096,7 +1094,6 @@
         const highResHeight = originalTemplateHeight;
         let highResCanvas = createGraphics(highResWidth, highResHeight);
         highResCanvas.background(255);
-
         if (backgroundLoaded && backgroundImg && !templateLoaded) {
           let imgAspect = backgroundImg.width / backgroundImg.height;
           let canvasAspect = highResWidth / highResHeight;
@@ -1108,19 +1105,20 @@
             drawWidth = highResWidth;
             drawHeight = drawWidth / imgAspect;
           }
+          highResCanvas.fill(200, 200, 200);
+          highResCanvas.noStroke();
+          highResCanvas.rect(0, 0, highResWidth, highResHeight);
           highResCanvas.image(backgroundImg, 0, 0, drawWidth, drawHeight);
         } else if (!backgroundLoaded && !templateLoaded) {
-          highResCanvas.fill(255);
+          highResCanvas.fill(200, 200, 200);
           highResCanvas.noStroke();
           highResCanvas.rect(0, 0, highResWidth, highResHeight);
         }
-
         if (templateLoaded) {
           highResCanvas.fill(255);
           highResCanvas.noStroke();
           highResCanvas.rect(0, 0, highResWidth, highResHeight);
         }
-
         if (photoLoaded && photoImgLeft && !photoInFrontLeft) {
           highResCanvas.push();
           highResCanvas.translate((xPosLeft + canvasWidth / 2) * (highResWidth / canvasWidth), (yPosLeft + canvasHeight / 2) * (highResHeight / canvasHeight));
@@ -1139,9 +1137,7 @@
           highResCanvas.image(photoImgRight, 0, 0, photoImgRight.width, photoImgRight.height);
           highResCanvas.pop();
         }
-
         highResCanvas.image(templateImg, 0, 0, highResWidth, highResHeight);
-
         if (photoLoaded && photoImgLeft && photoInFrontLeft) {
           highResCanvas.push();
           highResCanvas.translate((xPosLeft + canvasWidth / 2) * (highResWidth / canvasWidth), (yPosLeft + canvasHeight / 2) * (highResHeight / canvasHeight));
@@ -1160,7 +1156,6 @@
           highResCanvas.image(photoImgRight, 0, 0, photoImgRight.width, photoImgRight.height);
           highResCanvas.pop();
         }
-
         highResCanvas.fill(0);
         highResCanvas.textAlign(LEFT, TOP);
         highResCanvas.textFont('Special Elite');
@@ -1191,18 +1186,29 @@
           highResCanvas.textSize(adjustedFontSize * textScale);
           highResCanvas.text(fullName, signatureX * textScale, signatureY * textScale);
         }
-
         highResCanvas.canvas.toBlob((blob) => {
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = fullName ? `${fullName.replace(/[^a-zA-Z0-9]/g, '')}-FunBadge.png` : 'FunBadge.png';
-          link.style.display = 'none';
-          document.body.appendChild(link);
-          link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
-        }, 'image/png');
+          if (!blob) {
+            console.error('Failed to create blob for download');
+            alert('Error creating download file. Please try again.');
+            return;
+          }
+          try {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            const randomNum = Math.floor(Math.random() * 11) + 1;
+            link.download = `card${randomNum}.png`;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            console.log('Download triggered successfully');
+          } catch (error) {
+            console.error('Error triggering download:', error);
+            alert('Error triggering download. Please try again.');
+          }
+        }, 'image/png', 1.0);
       });
     });
   </script>
